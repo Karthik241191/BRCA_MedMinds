@@ -5,8 +5,8 @@ import { PatientInputForm } from '../components/PatientInputForm';
 import { FamilyHistoryTable } from '../components/FamilyHistoryTable';
 import { ResultsDisplay } from '../components/ResultsDisplay';
 import { ExportPanel } from '../components/ExportPanel';
-import { Header } from '../components/Header';
-import { Footer } from '../components/Footer';
+import { BRCAHeader } from '../components/BRCAHeader';
+import { BRCAFooter } from '../components/BRCAFooter';
 import { ScrollToTop } from '../components/ScrollToTop';
 
 const initialPatient: PatientData = {
@@ -92,7 +92,7 @@ export function BRCAChecker() {
   return (
     <div className="min-h-screen bg-background">
       <ScrollToTop />
-      <Header />
+      <BRCAHeader />
 
       {/* Main Content */}
       <main className="pt-24 pb-16">
@@ -136,7 +136,7 @@ export function BRCAChecker() {
         </div>
       </main>
 
-      <Footer />
+      <BRCAFooter />
     </div>
   );
 }
