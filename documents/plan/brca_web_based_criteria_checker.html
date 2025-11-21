@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BRCA Criteria Checker — Web Tool</title>
+  <style>
+    :root{--accent:#0b71eb;--muted:#6b7280;--card:#ffffff;--bg:#f3f4f6}
+    body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);margin:0;color:#111}
+    .wrap{max-width:1100px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;gap:16px}
+    h1{margin:0;font-size:20px}
+    .grid{display:grid;grid-template-columns:1fr 420px;gap:18px;margin-top:18px}
+    .card{background:var(--card);border-radius:10px;padding:14px;box-shadow:0 6px 20px rgba(16,24,40,0.06)}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type=text],input[type=number],select{width:100%;padding:8px;border-radius:6px;border:1px solid #e6e6e6;font-size:14px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:8px;border-bottom:1px solid #efefef;font-size:13px}
+    th{background:#fbfbfb;text-align:left}
+    .small{font-size:12px;color:var(--muted)}
+    .btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;border:none;cursor:pointer}
+    .btn.secondary{background:#f3f4f6;color:#111}
+    .row-buttons{display:flex;gap:8px}
+    .result{padding:12px;border-radius:8px;margin-top:12px}
+    .meets{background:#e6ffed;border:1px solid #2ecc71;color:#064c2e}
+    .not{background:#fff6f6;border:1px solid #ff6b6b;color:#7b1d1d}
+    .pill{display:inline-block;padding:6px 10px;border-radius:999px;background:#f3f4f6;font-weight:600;margin-right:8px}
+    .payers{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+    .payer-card{background:#fff;padding:10px;border-radius:8px;border:1px solid #f0f0f0}
+    footer{margin-top:18px;font-size:13px;color:var(--muted)}
+    @media (max-width:900px){.grid{grid-template-columns:1fr} .payers{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>BRCA Criteria Checker — Web tool</h1>
+      <div class="small">Runs in your browser. No data is sent to any server.</div>
+    </header>
+
+    <div class="grid">
+      <div>
+        <div class="card">
+          <h3>Patient inputs</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div>
+              <label>Patient name</label>
+              <input id="pt_name" type="text" placeholder="Jane Doe">
+            </div>
+            <div>
+              <label>Age (years)</label>
+              <input id="pt_age" type="number" min="0" placeholder="45">
+            </div>
+            <div>
+              <label>Sex assigned at birth</label>
+              <select id="pt_sex"><option value="F">F</option><option value="M">M</option></select>
+            </div>
+            <div>
+              <label>Ashkenazi Jewish ancestry</label>
+              <select id="pt_ash"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+            <div>
+              <label>Known familial pathogenic variant</label>
+              <select id="pt_famvar"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+            <div>
+              <label>Genetic counseling documented</label>
+              <select id="pt_gc"><option value="Y">Y</option><option value="N">N</option></select>
+            </div>
+
+            <div style="grid-column:1/3;margin-top:8px"><strong>Personal cancer history</strong></div>
+
+            <div>
+              <label>Personal breast cancer</label>
+              <select id="pt_breast"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+            <div>
+              <label>Age at breast dx</label>
+              <input id="pt_breast_age" type="number" min="0">
+            </div>
+            <div>
+              <label>Triple-negative breast</label>
+              <select id="pt_tnbc"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+            <div>
+              <label>Multiple primary breast cancers</label>
+              <select id="pt_mulprim"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+            <div>
+              <label>Ovarian / fallopian / peritoneal cancer</label>
+              <select id="pt_ovarian"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+            <div>
+              <label>Pancreatic cancer</label>
+              <select id="pt_pancreas"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+
+            <div>
+              <label>Prostate cancer</label>
+              <select id="pt_prostate"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+            <div>
+              <label>Prostate Gleason score</label>
+              <input id="pt_gleason" type="number" min="0" placeholder="7">
+            </div>
+            <div>
+              <label>Prostate metastatic</label>
+              <select id="pt_pro_meta"><option value="N">N</option><option value="Y">Y</option></select>
+            </div>
+
+          </div>
+
+          <hr style="margin:12px 0">
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn" id="addRel">Add relative</button>
+            <button class="btn secondary" id="clearRel">Clear relatives</button>
+            <div style="flex:1"></div>
+            <button class="btn" id="run">Evaluate</button>
+            <button class="btn secondary" id="exportJson">Export JSON</button>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Family history</h3>
+          <div class="small">Enter up to 40 relatives. Use exact cancer names for accurate matching.</div>
+          <table id="famTable" style="margin-top:8px">
+            <thead>
+              <tr><th>Relative</th><th>Degree</th><th>Side</th><th>Cancer</th><th>Age dx</th><th>Affected</th><th></th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <div>
+        <div class="card">
+          <h3>Result</h3>
+          <div id="finalVerdict" class="result small"></div>
+          <div id="reasonsList" class="small" style="margin-top:8px"></div>
+
+          <div style="margin-top:12px">
+            <div class="pill">Payer verdicts</div>
+            <div class="payers" id="payersGrid"></div>
+          </div>
+
+          <div style="margin-top:12px" class="small">
+            <strong>Notes:</strong> This tool uses conservative aggregated criteria (personal history, family history, known familial variant). Evicore column enforces documented genetic counseling as an additional requirement by default. Ask me to exact-map each payer’s policy bullets.
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:12px">
+          <h3>Export / Share</h3>
+          <p class="small">You can export the current patient and family data as JSON.</p>
+          <textarea id="exportArea" style="width:100%;height:120px"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Built for you — adjustable. Want exact payer mapping? Say which payer to prioritize and I'll apply the PDF rules precisely.
+    </footer>
+  </div>
+
+<script>
+  // --- helper functions ---
+  function el(q, ctx=document) { return ctx.querySelector(q) }
+  function elAll(q, ctx=document){ return Array.from(ctx.querySelectorAll(q)) }
+
+  const famTbody = el('#famTable tbody')
+  const MAX_REL = 40
+  let relCount = 0
+
+  function addRelative(data={}){
+    if(relCount>=MAX_REL) return
+    relCount++
+    const tr = document.createElement('tr')
+    tr.innerHTML = `
+      <td><input class="r_name" type="text" value="${data.name||''}" placeholder="Mother"></td>
+      <td><select class="r_deg"><option>1</option><option>2</option><option>3</option></select></td>
+      <td><select class="r_side"><option>Maternal</option><option>Paternal</option></select></td>
+      <td><select class="r_cancer"><option>Breast</option><option>Ovarian</option><option>Pancreatic</option><option>Prostate</option><option>Male breast</option><option>Other</option></select></td>
+      <td><input class="r_age" type="number" min="0" value="${data.age||''}"></td>
+      <td><select class="r_aff"><option>Y</option><option selected> N</option></select></td>
+      <td><div class="row-buttons"><button class="btn secondary btnDel">Delete</button></div></td>
+    `
+    famTbody.appendChild(tr)
+    // set defaults
+    if(data.degree) tr.querySelector('.r_deg').value = data.degree
+    if(data.side) tr.querySelector('.r_side').value = data.side
+    if(data.cancer) tr.querySelector('.r_cancer').value = data.cancer
+    if(data.affected) tr.querySelector('.r_aff').value = data.affected ? 'Y' : 'N'
+
+    tr.querySelector('.btnDel').addEventListener('click', ()=>{ tr.remove(); relCount-- })
+  }
+
+  function clearRel(){ famTbody.innerHTML=''; relCount=0 }
+
+  // initial sample row for usability
+  addRelative({name:'Mother',degree:1,side:'Maternal',cancer:'Breast',age:48,affected:true})
+
+  el('#addRel').addEventListener('click', ()=>addRelative())
+  el('#clearRel').addEventListener('click', ()=>clearRel())
+
+  // --- core logic ---
+  function readInputs(){
+    const patient = {
+      name: el('#pt_name').value.trim(),
+      age: Number(el('#pt_age').value)||null,
+      sex: el('#pt_sex').value,
+      ash: el('#pt_ash').value,
+      famvar: el('#pt_famvar').value,
+      gc: el('#pt_gc').value,
+      breast: el('#pt_breast').value,
+      breastAge: Number(el('#pt_breast_age').value)||null,
+      tnbc: el('#pt_tnbc').value,
+      multiple: el('#pt_mulprim').value,
+      ovarian: el('#pt_ovarian').value,
+      pancreas: el('#pt_pancreas').value,
+      prostate: el('#pt_prostate').value,
+      gleason: Number(el('#pt_gleason').value)||null,
+      prometa: el('#pt_pro_meta').value
+    }
+    const family = []
+    elAll('#famTable tbody tr').forEach(tr=>{
+      const name = tr.querySelector('.r_name').value.trim()
+      const degree = Number(tr.querySelector('.r_deg').value)
+      const side = tr.querySelector('.r_side').value
+      const cancer = tr.querySelector('.r_cancer').value
+      const age = Number(tr.querySelector('.r_age').value)||null
+      const affected = tr.querySelector('.r_aff').value === 'Y'
+      if(!cancer) return
+      family.push({name,degree,side,cancer,age,affected})
+    })
+    return {patient,family}
+  }
+
+  function evaluate(data){
+    const p = data.patient
+    const fam = data.family
+    const reasons = []
+    // Known familial
+    if(p.famvar==='Y') reasons.push('Known familial pathogenic variant identified')
+
+    // Personal criteria
+    if(p.breast==='Y' && p.breastAge && p.breastAge<=50) reasons.push('Personal breast cancer diagnosed at age <=50')
+    if(p.tnbc==='Y') reasons.push('Personal triple-negative breast cancer')
+    if(p.multiple==='Y') reasons.push('Personal multiple primary breast cancers')
+    if(p.sex==='M' && p.breast==='Y') reasons.push('Personal male breast cancer')
+    if(p.ovarian==='Y') reasons.push('Personal ovarian/fallopian/peritoneal cancer')
+    if(p.pancreas==='Y') reasons.push('Personal pancreatic cancer')
+    if(p.prostate==='Y' && p.gleason>=7 && p.prometa==='Y') reasons.push('Personal metastatic prostate cancer with Gleason >=7')
+
+    // Family criteria
+    // 1) first-degree breast <=50
+    const firstBreast50 = fam.some(r=> r.affected && r.cancer==='Breast' && r.degree===1 && r.age && r.age<=50)
+    if(firstBreast50) reasons.push('First-degree relative with breast cancer diagnosed <=50')
+    // 2) 1st/2nd-degree ovarian
+    const ovarianRel = fam.some(r=> r.affected && r.cancer==='Ovarian' && (r.degree===1||r.degree===2))
+    if(ovarianRel) reasons.push('First/second-degree relative with ovarian cancer')
+    // 3) 1st-degree pancreatic
+    const panRel = fam.some(r=> r.affected && r.cancer==='Pancreatic' && r.degree===1)
+    if(panRel) reasons.push('First-degree relative with pancreatic cancer')
+    // 4) male relative with breast (1/2)
+    const maleBreastRel = fam.some(r=> r.affected && r.cancer==='Male breast' && (r.degree===1||r.degree===2))
+    if(maleBreastRel) reasons.push('Male relative with breast cancer (1st/2nd degree)')
+    // 5) >=3 breast/prostate on same side
+    const sideCounts = {}
+    fam.forEach(r=>{ if(r.affected && (r.cancer==='Breast' || r.cancer==='Prostate')){ sideCounts[r.side]=(sideCounts[r.side]||0)+1 } })
+    for(const s in sideCounts){ if(sideCounts[s]>=3) reasons.push('Three or more breast/prostate diagnoses on the same side of family ('+s+')') }
+    // 6) Ashkenazi + close relative with BRCA-related cancer
+    if(p.ash==='Y' && fam.some(r=> r.affected && ['Breast','Ovarian','Pancreatic'].includes(r.cancer)) ) reasons.push('Ashkenazi ancestry plus family history of BRCA-related cancer')
+
+    const meets = reasons.length>0
+    return {meets,reasons}
+  }
+
+  function evaluatePayers(data, results){
+    // Payers: UHC, Evicore, BCBS, Aetna, Regence, Carelon
+    // Evicore requires genetic counseling documented as additional check (approximation)
+    const payers = {}
+    const meetsAny = results.meets
+    payers['UHC'] = {verdict: meetsAny ? 'Y' : 'N', reason: meetsAny ? results.reasons.join(', ') : 'Does not meet UHC-approx criteria.'}
+    payers['Evicore'] = {verdict: (data.patient.famvar==='Y' || (data.patient.gc==='Y' && meetsAny)) ? 'Y' : 'N', reason: (data.patient.famvar==='Y' || (data.patient.gc==='Y' && meetsAny)) ? results.reasons.join(', ') : 'Does not meet Evicore-approx criteria (requires genetic counseling).'}
+    payers['BCBS'] = {verdict: meetsAny ? 'Y' : 'N', reason: meetsAny ? results.reasons.join(', ') : 'Does not meet BCBS-approx criteria.'}
+    payers['Aetna'] = {verdict: meetsAny ? 'Y' : 'N', reason: meetsAny ? results.reasons.join(', ') : 'Does not meet Aetna-approx criteria.'}
+    payers['Regence'] = {verdict: meetsAny ? 'Y' : 'N', reason: meetsAny ? results.reasons.join(', ') : 'Does not meet Regence-approx criteria.'}
+    payers['Carelon'] = {verdict: meetsAny ? 'Y' : 'N', reason: meetsAny ? results.reasons.join(', ') : 'Does not meet Carelon-approx criteria.'}
+    return payers
+  }
+
+  function renderPayers(payers){
+    const grid = el('#payersGrid')
+    grid.innerHTML = ''
+    for(const name in payers){
+      const p = payers[name]
+      const div = document.createElement('div')
+      div.className = 'payer-card'
+      div.innerHTML = `<strong>${name}</strong><div style="margin-top:6px">Verdict: <strong>${p.verdict}</strong></div><div class="small" style="margin-top:6px">${p.reason}</div>`
+      grid.appendChild(div)
+    }
+  }
+
+  function renderFinal(results, payers, patient){
+    const finalEl = el('#finalVerdict')
+    const reasonsEl = el('#reasonsList')
+    if(results.meets){
+      finalEl.className = 'result meets'
+      finalEl.innerHTML = `<strong>MEETS CRITERIA</strong>`
+      reasonsEl.innerHTML = results.reasons.map(r=>`<div>• ${r}</div>`).join('')
+    } else {
+      finalEl.className = 'result not'
+      finalEl.innerHTML = `<strong>DOES NOT MEET CRITERIA</strong>`
+      reasonsEl.innerHTML = `<div class="small">No qualifying personal or family criteria met. Consider verifying family/personal details or known familial variant. (Patient age: ${patient.age||'n/a'})</div>`
+    }
+    renderPayers(payers)
+  }
+
+  el('#run').addEventListener('click', ()=>{
+    const data = readInputs()
+    const res = evaluate(data)
+    const payers = evaluatePayers(data,res)
+    renderFinal(res,payers,data.patient)
+  })
+
+  el('#exportJson').addEventListener('click', ()=>{
+    const data = readInputs()
+    el('#exportArea').value = JSON.stringify(data,null,2)
+  })
+
+  // Add sample second relative button for demo
+  addRelative({name:'Paternal aunt',degree:2,side:'Paternal',cancer:'Ovarian',age:60,affected:true})
+
+</script>
+</body>
+</html>
