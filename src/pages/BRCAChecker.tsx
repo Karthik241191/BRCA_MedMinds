@@ -96,9 +96,9 @@ export function BRCAChecker() {
 
       {/* Main Content */}
       <main className="pt-24 pb-16">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-12">
           {/* Page Header */}
-          <div className="mb-8">
+          <div className="mb-10">
             <h1 className="text-3xl font-medium mb-2">BRCA Criteria Checker</h1>
             <p className="text-muted-foreground">
               Runs in your browser. No data is sent to any server.
@@ -106,9 +106,9 @@ export function BRCAChecker() {
           </div>
 
           {/* Main Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Left Column - 2/3 width */}
-            <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column - 50% width */}
+            <div className="space-y-6">
               <PatientInputForm
                 patient={patient}
                 onPatientChange={setPatient}
@@ -121,7 +121,7 @@ export function BRCAChecker() {
               <FamilyHistoryTable family={family} onFamilyChange={setFamily} />
             </div>
 
-            {/* Right Column - 1/3 width */}
+            {/* Right Column - 50% width */}
             <div className="space-y-6">
               <ResultsDisplay results={results} payers={payers} patient={patient} />
               <ExportPanel jsonData={exportData} />
