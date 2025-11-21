@@ -127,12 +127,6 @@ export function BRCAChecker() {
               <ExportPanel jsonData={exportData} />
             </div>
           </div>
-
-          {/* Footer Note */}
-          <div className="mt-8 text-sm text-muted-foreground text-center">
-            Built for you — adjustable. Want exact payer mapping? Say which payer to prioritize and I'll
-            apply the PDF rules precisely.
-          </div>
         </div>
       </main>
 
