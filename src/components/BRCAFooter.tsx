@@ -1,8 +1,8 @@
 export function BRCAFooter() {
   return (
-    <footer className="border-t border-border bg-muted/30">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <footer className="mt-16 md:mt-20 border-t border-border bg-muted/30">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {/* About Section */}
           <div>
             <h3 className="font-medium mb-3">About BRCA Testing</h3>
@@ -42,7 +42,7 @@ export function BRCAFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="mt-10 md:mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} MedMinds Healthcare Solutions. All rights reserved.
           </p>
