@@ -1,7 +1,7 @@
 export function BRCAFooter() {
   return (
     <footer className="mt-16 md:mt-20 border-t border-border bg-muted/30">
-      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+      <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8" style={{ paddingTop: '3.5rem', paddingBottom: '1.5rem' }}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
           {/* About Section */}
           <div>
@@ -42,7 +42,7 @@ export function BRCAFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-10 md:mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4" style={{ marginTop: '3.5rem', paddingTop: '2rem' }}>
           <p className="text-sm text-muted-foreground">
             © {new Date().getFullYear()} MedMinds Healthcare Solutions. All rights reserved.
           </p>

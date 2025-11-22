@@ -10,7 +10,6 @@ interface PatientInputFormProps {
   onAddRelative: () => void;
   onClearRelatives: () => void;
   onEvaluate: () => void;
-  onExportJSON: () => void;
 }
 
 export function PatientInputForm({
@@ -18,17 +17,23 @@ export function PatientInputForm({
   onPatientChange,
   onAddRelative,
   onClearRelatives,
-  onEvaluate,
-  onExportJSON
+  onEvaluate
 }: PatientInputFormProps) {
   const updateField = <K extends keyof PatientData>(field: K, value: PatientData[K]) => {
     onPatientChange({ ...patient, [field]: value });
   };
 
   return (
-    <Card>
+    <Card className="shadow-card-base">
       <CardHeader>
-        <CardTitle>Patient Inputs</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          Patient Inputs
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -234,11 +239,8 @@ export function PatientInputForm({
             Clear relatives
           </Button>
           <div className="flex-1"></div>
-          <Button onClick={onEvaluate}>
+          <Button onClick={onEvaluate} size="lg">
             Evaluate
-          </Button>
-          <Button variant="secondary" onClick={onExportJSON}>
-            Export JSON
           </Button>
         </div>
       </CardContent>
