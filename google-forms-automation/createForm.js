@@ -439,6 +439,7 @@ function rebuildExistingForm() {
     );
     
     // Step 3: Add all questions (copy from createBRCAProjectQuestionnaireForm)
+    Logger.log('Adding questions...');
     addAllQuestions(form);
     
     Logger.log('✅ Form rebuilt successfully!');
@@ -453,9 +454,7 @@ function rebuildExistingForm() {
     
   } catch (error) {
     Logger.log('❌ Error rebuilding form: ' + error.message);
-    return {
-      success: false,
-      error: error.message
-    };
+    Logger.log('Stack trace: ' + error.stack);
+    throw error;
   }
 }
